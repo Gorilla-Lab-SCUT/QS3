@@ -5,3 +5,4 @@
 - [ ] change the absolute path in code to relative path
 - [ ] upload the SpeckleNet dataset
 - [ ] write the instruction
+- [ ] change code filename
