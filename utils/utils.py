@@ -3,6 +3,7 @@ import glob
 import os
 import bpy
 from mathutils import Matrix, Vector
+import ipdb
 
 
 def read_obj_file(modelnet_dir: str, category_list: list) -> [list, list]:
@@ -21,6 +22,7 @@ def read_obj_file(modelnet_dir: str, category_list: list) -> [list, list]:
     test_obj_path = {}
     
     for category in  category_list:
+        # same to PointDAN, the cabinet category in ModelNet is renamed as night_stand category
         if category.lower() =="cabinet":
             category = "night_stand"
         train_path = modelnet_dir + category.lower() + "/train"
@@ -29,6 +31,7 @@ def read_obj_file(modelnet_dir: str, category_list: list) -> [list, list]:
         test_obj_path[category] = glob.glob(test_path + '/*.obj')
     
     return train_obj_path, test_obj_path
+
 
 
 #create a new directory 
@@ -45,6 +48,7 @@ def mkdir(path: str) -> None:
     else:
         print("---  folder already exists!  ---")
     
+
 def import_obj_file(obj_file_path: str):
     """import an object in blender, then scale it in a unit cube and rotate
 
@@ -54,13 +58,13 @@ def import_obj_file(obj_file_path: str):
     Returns:
         bpy.data.object, np.array, float, float: imported object, bounding box, scale, z-rotation
     """
-
     old_objs = set(bpy.data.objects)
     bpy.ops.import_scene.obj(filepath=obj_file_path)
     imported_obj = list(set(bpy.data.objects) - old_objs)[0]
-    bbox, scale, rotation, location = scale_and_rotate(imported_obj)
+    bbox = scale_and_rotate(imported_obj)
 
-    return imported_obj, bbox, np.array(scale), np.array(rotation), np.array(location)
+    return imported_obj, bbox
+
 
 def scale_and_rotate(obj):
     """
@@ -74,7 +78,6 @@ def scale_and_rotate(obj):
     bounding_box = np.array([obj.matrix_world @ Vector(corner) for corner in obj.bound_box])
     min_corner = np.min(bounding_box, axis=0)
     max_corner = np.max(bounding_box, axis=0)
-    # ipdb.set_trace()
 
     scale_factor = 1 / np.max(np.array((max_corner[0] - min_corner[0], max_corner[1] - min_corner[1], max_corner[2] - min_corner[2])))
 
@@ -89,7 +92,7 @@ def scale_and_rotate(obj):
     bbox_corners = np.array(bounding_box)
     BBOX["bbox"] = bbox_corners
 
-    return BBOX, obj.scale, obj.rotation_euler, obj.location
+    return BBOX
 
 def move_2_center(obj):
     """
@@ -113,12 +116,6 @@ def camera_point_at_origin(camera):
     camera: the camera in blender
     obj: the interested objects
     """
-    # bounding_box = np.array([obj.matrix_world @ Vector(corner) for corner in obj.bound_box])
-    # min_corner = np.min(bounding_box, axis=0)
-    # max_corner = np.max(bounding_box, axis=0)
-    # # ipdb.set_trace()
-    # # center = np.array(((max_corner[0] + min_corner[0])/2, (max_corner[1] - min_corner[1])/2, (max_corner[2] - min_corner[2])/2))
-
     o = bpy.data.objects.new( "empty", None )
     o.location = [0,0,0]
 
@@ -140,3 +137,30 @@ def camera_point_at_origin(camera):
     camera.constraints.remove(camera_constraint) 
 
     bpy.data.objects.remove(o)
+
+def get_empty_dir(data_path, category, type, model_dir):
+    """
+    get the empty path that need to generate point cloud 
+
+    input:
+    data_path: the generated point clouds path
+    category: the category need to be checked
+    type: train or test
+    model_dir: the modelnet40 path
+
+    return:
+    empty_list: the empty obj file name
+    """
+    dir = os.path.join(data_path, category, type)
+    model_path = os.path.join(model_dir, category, type)
+    import glob
+    names = glob.glob(model_path + "/*.obj")
+    names = [name.split('/')[-1].split('.')[0] for name in names]
+    obj_list = []
+    for name in names:
+        if os.path.exists(os.path.join(dir, name, "raw_pc.xyz")):
+            pass
+        else:
+            obj_list.append(os.path.join(model_path, name + ".obj"))
+    
+    return obj_list

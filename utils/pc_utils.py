@@ -5,89 +5,6 @@ import torch
 import ipdb
 
 
-def generate_noisy_pc(save_path, view, disparity_times):
-    """
-    generate noisy point cloud from rendered images
-
-    input:
-    save_path: the path that contain rendered images, camera parameters and the generated point clouds
-    """
-    raw_pc = []
-    clean_pc_list = []
-    for i in range(view):
-        focal_length, camera_center = get_K(os.path.join(save_path, "Camera_K_left_view_{}.txt".format(i)))
-        R_left, T_left, R_right, T_right = get_RT(os.path.join(save_path, "Camera_R_left_view_{}.txt".format(i)), os.path.join(save_path, "Camera_T_left_view_{}.txt".format(i)), os.path.join(save_path, "Camera_R_right_view_{}.txt".format(i)), os.path.join(save_path, "Camera_T_right_view_{}.txt".format(i)))
-        
-
-        baseline = calculate_base_line(R_left, T_left, R_right, T_right)
-        # ipdb.set_trace()
-        left_cam = cv2.imread(os.path.join(save_path, "view_{}_f0.png".format(i)), 0)
-        right_cam = cv2.imread(os.path.join(save_path, "view_{}_f1.png".format(i)), 0)
-        # ipdb.set_trace()
-        raw_disparity = raw_disparity_calculate(left_cam, right_cam, disparity_times)
-        raw_mask = raw_disparity_mask_calculate(raw_disparity)
-        raw_z, raw_mask = raw_depth_map_generate(raw_disparity, raw_mask, 1080, baseline, focal_length)
-        # ipdb.set_trace()
-        rraw_Z, rraw_mask, rfocal_length, rcamera_center, rimage_size = raw_depth_and_camera_resize(raw_z, raw_mask, focal_length, camera_center, 1080, 0.25)
-        canonical_pointcloud = raw_point_cloud_rotate_generate(rraw_Z, rraw_mask, rimage_size, rcamera_center, rfocal_length, R_left, T_left)
-        # np.savetxt(os.path.join(save_path,  'raw_view_{}.xyz'.format(i)), canonical_pointcloud)
-        # ipdb.set_trace()
-        bbox = np.load(save_path + '/bbox.npy', allow_pickle=True)
-        # ipdb.set_trace()
-        bbox = bbox[()]["bbox"]
-        canonical_pointcloud = crop_by_bboxes_dict(canonical_pointcloud, bbox, delta=0)
-        # ipdb.set_trace()
-        raw_pc.append(canonical_pointcloud)
-        # np.savetxt(os.path.join(save_path,  'raw_view_{}.xyz'.format(i)), canonical_pointcloud)
-        # fps_pc = farthest_point_sample_np(canonical_pointcloud, 2048)
-
-
-        # np.savetxt(os.path.join(save_path,  'raw.xyz'), fps_pc)
-
-        #clean point cloud
-        clean_depth = cv2.imread(os.path.join(save_path,'view_{}_f0_depth0001.exr'.format(i)), cv2.IMREAD_UNCHANGED)[:,:,0]
-        rclean_depth,  rfocal_length, rcamera_center, rimage_size = clean_depth_resize(clean_depth, focal_length, camera_center, 1080, 0.25)
-        clean_pc = clean_point_cloud_generate(rclean_depth, 270, rcamera_center, rfocal_length, R_left, T_left)
-        crop_pc = crop_by_bboxes_dict(clean_pc, bbox, delta=0)
-        # clean_pc_crop = farthest_point_sample_np(crop_pc, 2048)
-        clean_pc_list.append(crop_pc)
-        # np.savetxt(os.path.join(save_path,  'clean_view_{}.xyz'.format(i)), crop_pc)  
-    for j in range(view ):
-        if j == 0:
-            pc = raw_pc[j]
-        else:
-            pc =  np.concatenate((raw_pc[j], pc))
-
-    # if FPS == True:
-    #     fps_pc = farthest_point_sample_np(pc, 2048)
-    #     np.savetxt(os.path.join(save_path,  'raw_pc_fps.xyz'.format(i)), fps_pc)
-    # else:
-    #     np.savetxt(os.path.join(save_path,  'raw_pc_wo_fps.xyz'.format(i)), pc)
-
-
-    fps_pc = farthest_point_sample_np(pc, 2048)
-    np.savetxt(os.path.join(save_path,  'raw_pc_fps_disparity_{}.xyz'.format(disparity_times)), fps_pc)
-    np.savetxt(os.path.join(save_path,  'raw_pc_wo_fps_disparity_{}.xyz'.format(disparity_times)), pc)
-
-
-
-
-    for j in range(view ):
-        if j == 0:
-            pc = clean_pc_list[j]
-        else:
-            pc =  np.concatenate((clean_pc_list[j], pc))
-    # if FPS == True:
-    #     fps_pc = farthest_point_sample_np(pc, 2048)
-    #     np.savetxt(os.path.join(save_path,  'clean_pc.xyz'.format(i)), fps_pc)
-    # else:
-    #     np.savetxt(os.path.join(save_path,  'clean_pc_wo_fps.xyz'.format(i)), pc)
-    fps_pc = farthest_point_sample_np(pc, 2048)
-    np.savetxt(os.path.join(save_path,  'clean_pc_fps_disparity_{}.xyz'.format(disparity_times)), fps_pc)
-    np.savetxt(os.path.join(save_path,  'clean_pc_wo_fps_disparity_{}.xyz'.format(disparity_times)), pc)
-
-
-
 def get_K(K_file):
     """[To get focal_length and camera_center from intrinsic matrix]
 
@@ -132,7 +49,7 @@ def calculate_base_line(R1, T1, R2, T2):
     b = np.linalg.norm(T)
     return b
 
-def raw_disparity_calculate(left_cam, right_cam, disparity_times, max_disparities = 160, block_size = 19):
+def raw_disparity_calculate(left_cam, right_cam, max_disparities = 160, block_size = 19):
     """
     calculate the disparity map
     input: 
@@ -141,12 +58,7 @@ def raw_disparity_calculate(left_cam, right_cam, disparity_times, max_disparitie
     """
     stereo = cv2.StereoBM_create(numDisparities=max_disparities, blockSize=block_size)
 
-    # raw_disparity = stereo.compute(left_cam, right_cam) / 16.0
-    # ipdb.set_trace()
-    # the large the disparity is , the layering is more distinct [16, 8, 4, 2, 1]
-    raw_disparity = stereo.compute(left_cam, right_cam) / disparity_times
-    raw_disparity = np.rint(raw_disparity)
-    raw_disparity /= (16.0 / disparity_times)
+    raw_disparity = stereo.compute(left_cam, right_cam) / 16.0
     
     return raw_disparity
 
@@ -193,7 +105,7 @@ def raw_depth_map_generate(raw_disparity, raw_mask, image_size, base_line, focal
                     raw_mask[iy,ix] = 0
 
     return raw_Z, raw_mask
-
+    
 def raw_depth_and_camera_resize(depth, mask, focal_length, camera_center, image_size, scale):
     """
     calculate resized depth, mask and camera parameters
@@ -206,10 +118,8 @@ def raw_depth_and_camera_resize(depth, mask, focal_length, camera_center, image_
     scale: the scale factor
     """
 
-    # print("Resizing Raw Depth and Camera")
     depth = torch.from_numpy(depth).float()
     depth = depth.unsqueeze(0).unsqueeze(0)
-    # ipdb.set_trace()
     depth = torch.nn.functional.interpolate(depth, scale_factor=scale)
     depth = depth.squeeze(0).squeeze(0).numpy()
 
@@ -217,8 +127,6 @@ def raw_depth_and_camera_resize(depth, mask, focal_length, camera_center, image_
     mask = mask.unsqueeze(0).unsqueeze(0)
     mask = torch.nn.functional.interpolate(mask, scale_factor=scale)
     mask = mask.squeeze(0).squeeze(0).numpy()
-
-    # print("Nums where mask equals 1:", np.array(np.where(mask==1)).shape[1])
 
     focal_length *= scale
     camera_center *= scale
@@ -238,7 +146,7 @@ def clean_depth_resize(depth, focal_length, camera_center, image_size, scale):
     scale: the scale factor
     """
 
-    # print("Resizing Raw Depth and Camera")
+    # Resizing Raw Depth and Camera
     depth = torch.from_numpy(depth).float()
     depth = depth.unsqueeze(0).unsqueeze(0)
     depth = torch.nn.functional.interpolate(depth, scale_factor=scale)
@@ -249,8 +157,6 @@ def clean_depth_resize(depth, focal_length, camera_center, image_size, scale):
     image_size *= scale
 
     return depth, focal_length, camera_center, image_size
-
-
 
 def raw_point_cloud_rotate_generate(raw_depth, raw_mask, image_size, camera_center, focal_length, R, T):
     """
@@ -299,13 +205,8 @@ def farthest_point_sample_np(xyz, npoint):
     xyz = xyz.transpose(1,0)
     xyz = np.expand_dims(xyz, axis=0)
     B, C, N = xyz.shape
-    # print("Current PointCloud Nums:", N)
-    # print("Propose DownSampling PointCloud Nums:", npoint)
     centroids = np.zeros((B, npoint), dtype=np.int64)
     distance = np.ones((B, N)) * 1e10
-    # ipdb.set_trace()
-    # print('B',B)
-    # print("N",N)
     farthest = np.random.randint(0, N, (B,), dtype=np.int64)
     batch_indices = np.arange(B, dtype=np.int64)
     centroids_vals = np.zeros((B, C, npoint))
@@ -319,9 +220,8 @@ def farthest_point_sample_np(xyz, npoint):
         farthest = np.argmax(distance, axis=1)  # get the index of the point farthest away
     fps_pcd = centroids_vals.squeeze(0).transpose(1,0)
 
-    # print("FPS DONE")
-
     return fps_pcd
+
 
 def clean_point_cloud_generate(clean_depth, image_size, camera_center, focal_length, R, T):
     """
@@ -370,3 +270,57 @@ def crop_by_bboxes_dict(pointcloud, bbox, delta=0):
     crop_pointcloud = pointcloud[crop_index]
         
     return crop_pointcloud
+
+
+def generate_noisy_pc(save_path, view):
+    """
+    generate noisy point cloud from rendered images
+
+    input:
+    save_path: the path that contain rendered images, camera parameters and the generated point clouds
+    """
+    raw_pc = []
+    clean_pc_list = []
+    for i in range(view):
+        focal_length, camera_center = get_K(os.path.join(save_path, "Camera_K_left_view_{}.txt".format(i)))
+        R_left, T_left, R_right, T_right = get_RT(os.path.join(save_path, "Camera_R_left_view_{}.txt".format(i)), os.path.join(save_path, "Camera_T_left_view_{}.txt".format(i)), os.path.join(save_path, "Camera_R_right_view_{}.txt".format(i)), os.path.join(save_path, "Camera_T_right_view_{}.txt".format(i)))
+        
+
+        baseline = calculate_base_line(R_left, T_left, R_right, T_right)
+        left_cam = cv2.imread(os.path.join(save_path, "view_{}_f0.png".format(i)), 0)
+        right_cam = cv2.imread(os.path.join(save_path, "view_{}_f1.png".format(i)), 0)
+        raw_disparity = raw_disparity_calculate(left_cam, right_cam)
+        raw_mask = raw_disparity_mask_calculate(raw_disparity)
+        raw_z, raw_mask = raw_depth_map_generate(raw_disparity, raw_mask, 1080, baseline, focal_length)
+        rraw_Z, rraw_mask, rfocal_length, rcamera_center, rimage_size = raw_depth_and_camera_resize(raw_z, raw_mask, focal_length, camera_center, 1080, 0.25)
+        canonical_pointcloud = raw_point_cloud_rotate_generate(rraw_Z, rraw_mask, rimage_size, rcamera_center, rfocal_length, R_left, T_left)
+        bbox = np.load(save_path + '/bbox.npy', allow_pickle=True)
+        bbox = bbox[()]["bbox"]
+        canonical_pointcloud = crop_by_bboxes_dict(canonical_pointcloud, bbox, delta=0)
+        raw_pc.append(canonical_pointcloud)
+        np.savetxt(os.path.join(save_path,  'raw_view_{}.xyz'.format(i)), canonical_pointcloud)
+
+
+        #clean point cloud
+        clean_depth = cv2.imread(os.path.join(save_path,'view_{}_f0_depth0001.exr'.format(i)), cv2.IMREAD_UNCHANGED)[:,:,0]
+        rclean_depth,  rfocal_length, rcamera_center, rimage_size = clean_depth_resize(clean_depth, focal_length, camera_center, 1080, 0.25)
+        clean_pc = clean_point_cloud_generate(rclean_depth, 270, rcamera_center, rfocal_length, R_left, T_left)
+        crop_pc = crop_by_bboxes_dict(clean_pc, bbox, delta=0)
+        clean_pc_list.append(crop_pc)
+        np.savetxt(os.path.join(save_path,  'clean_view_{}.xyz'.format(i)), crop_pc)  
+    for j in range(view ):
+        if j == 0:
+            pc = raw_pc[j]
+        else:
+            pc =  np.concatenate((raw_pc[j], pc))
+    fps_pc = farthest_point_sample_np(pc, 2048)
+    np.savetxt(os.path.join(save_path,  'raw_pc.xyz'.format(i)), fps_pc)
+
+    for j in range(view ):
+        if j == 0:
+            pc = clean_pc_list[j]
+        else:
+            pc =  np.concatenate((clean_pc_list[j], pc))
+    fps_pc = farthest_point_sample_np(pc, 2048)
+    np.savetxt(os.path.join(save_path,  'clean_pc.xyz'.format(i)), fps_pc)
+

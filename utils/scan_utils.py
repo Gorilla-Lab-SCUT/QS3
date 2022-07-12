@@ -32,7 +32,7 @@ def init_render_setting(resolution):
     bpy.context.scene.render.resolution_x   =  resolution
     bpy.context.scene.render.resolution_y   =  resolution
 
-    bpy.ops.object.camera_add(enter_editmode=False, align='VIEW', location=(0, 0, 0), rotation=(1.10871, 0.0132652, 1.14827), scale=(1, 1, 1))
+    bpy.ops.object.camera_add(enter_editmode=False, align='VIEW', location=(0, 0, 0), rotation=(0, 0, 0), scale=(1, 1, 1))
     bpy.context.scene.camera = bpy.context.object
 
     bpy.context.scene.cycles.device = 'GPU'
@@ -42,6 +42,7 @@ def init_render_setting(resolution):
     cpref.get_devices()
     for device in cpref.devices:
         device.use = True if device.type == 'CUDA' else False
+
 
 def add_depth_node():
     """
@@ -87,15 +88,15 @@ def get_empty_dir(data_path, category, type, model_dir):
     names = glob.glob(model_path + "/*.obj")
     names = [name.split('/')[-1].split('.')[0] for name in names]
     obj_list = []
-    # ipdb.set_trace()
     for name in names:
-        if os.path.exists(os.path.join(dir, name, "clean_pc_fps_disparity_16.xyz")):
+        if os.path.exists(os.path.join(dir, name, "clean_pc.xyz")):
             pass
         else:
             obj_list.append(name)
     obj_list.sort()
-    # ipdb.set_trace()
-    
+    for i in range(len(obj_list)):
+        obj_list[i] = os.path.join(model_dir, category, type, obj_list[i]+".obj")
+
     return obj_list
 
 
@@ -127,55 +128,85 @@ def import_obj_in_specific_pose(obj_file_path: str, pose: dict):
 
     return imported_obj, BBOX
 
-def render_image(save_dir: str, depth_file_output, pose_file: dict):
+
+def camera_point_at_obj(camera):
+    """
+    sample a camera location around interested objects, and set the camera pointing at obj
+    input:
+    camera: the camera in blender
+    obj: the interested objects
+    """
+    # bounding_box = np.array([obj.matrix_world @ Vector(corner) for corner in obj.bound_box])
+    # min_corner = np.min(bounding_box, axis=0)
+    # max_corner = np.max(bounding_box, axis=0)
+    # # ipdb.set_trace()
+    # # center = np.array(((max_corner[0] + min_corner[0])/2, (max_corner[1] - min_corner[1])/2, (max_corner[2] - min_corner[2])/2))
+
+    o = bpy.data.objects.new( "empty", None )
+    o.location = [0,0,0]
+
+    # set camera parameters range
+    radius = np.random.uniform(3,5)
+    elevation = np.random.uniform(0,180)
+    azimuth = np.random.uniform(20,50)
+    #set camera locations
+    camera.location[0] = radius * np.cos(azimuth * np.pi/180) * np.sin(elevation * np.pi/180)
+    camera.location[1] = radius * np.cos(azimuth * np.pi/180) * np.cos(elevation * np.pi/180)
+    camera.location[2] = radius * np.sin(azimuth * np.pi/180)
+    camera.data.sensor_height = camera.data.sensor_width
+    camera_constraint = camera.constraints.new(type="TRACK_TO")
+    camera_constraint.target = o
+    camera_constraint.track_axis = 'TRACK_NEGATIVE_Z'
+    camera_constraint.up_axis = 'UP_Y'
+    bpy.ops.object.select_all(action='DESELECT')
+    camera.select_set(state=True)
+    bpy.ops.object.visual_transform_apply()
+    camera.constraints.remove(camera_constraint) 
+
+    bpy.data.objects.remove(o)
+
+def render_image(render_view, save_dir, depth_file_output):
     """
     render spotted images
     input:
+    render_view: the view number needed to be rendered
     save_dir: the depth and rendered image save dir
     obj: the interested object
     depth_file_output: depth render node
     """
     camera = bpy.data.objects['Camera']
     bpy.context.scene.camera = camera
-    # camera_point_at_obj(camera, obj
+    camera_point_at_obj(camera)
 
-    camera_location = pose_file["camera_location"]
-    camera_rotation = pose_file["camera_rotation"]
-
-    render_view = len(camera_location)
-
-    # camera_0_location = Vector([camera.location[0], camera.location[1], camera.location[2]])
-    # camera_0_rotation_euler = Vector([camera.rotation_euler[0], camera.rotation_euler[1], camera.rotation_euler[2]])
-    # # bpy.ops.wm.save_as_mainfile(filepath="/data2/lab-chen.yongwei/BlenderProc/test.blend")
-    # # ipdb.set_trace()
-
-    # set camera intrinsic parameters
-    camera.data.lens = pose_file["camera_lens"] 
-    camera.data.sensor_fit = pose_file["camera_sensor_fit"]
-    camera.data.sensor_width = pose_file["camera_sensor_width"] 
-    camera.data.sensor_height = pose_file["camera_sensor_height"]
-    camera.data.shift_x = pose_file["camera_shift_x"]
-    camera.data.shift_y = pose_file["camera_shift_y"]
-
+    camera_0_location = Vector([camera.location[0], camera.location[1], camera.location[2]])
+    camera_0_rotation_euler = Vector([camera.rotation_euler[0], camera.rotation_euler[1], camera.rotation_euler[2]])
+    # bpy.ops.wm.save_as_mainfile(filepath="/data2/lab-chen.yongwei/BlenderProc/test.blend")
+    # ipdb.set_trace()
     
     for i in range(render_view):
-        # left camera
-        camera.location = camera_location[i]
-        camera.rotation_euler = Vector(camera_rotation[i])
-
-        bpy.ops.object.select_all(action='DESELECT')
-        camera.select_set(state=True)
-        bpy.ops.object.visual_transform_apply()
-
+        if i == 0:
+            pass
+        else:
+            # ipdb.set_trace()
+            camera.location = camera_0_location + Vector(np.clip(0.05 * ((i+1) / render_view)* np.random.randn(3, 1), -1 * 0.1, 0.1))
+            # print(camera_0_location)
+            # ipdb.set_trace()
+            camera.rotation_euler[0] = camera_0_rotation_euler[0] + float(np.clip(0.1 * ((i+1) / render_view) * np.random.randn(1, 1), -1 * 0.1, 0.1))
+            camera.rotation_euler[1] = camera_0_rotation_euler[1] + float(np.clip(0.1 * ((i+1) / render_view) * np.random.randn(1, 1), -1 * 0.1, 0.1))
+            camera.rotation_euler[2] = camera_0_rotation_euler[2] + float(np.clip(0.1 * ((i+1) / render_view) * np.random.randn(1, 1), -1 * 0.1, 0.1))
+            bpy.ops.object.select_all(action='DESELECT')
+            camera.select_set(state=True)
+            bpy.ops.object.visual_transform_apply()
         c2location = set_projector(camera)
         bpy.data.scenes["Scene"].render.filepath = save_dir+'/view_{}_f0'.format(i)
         depth_file_output.file_slots[0].path = bpy.data.scenes["Scene"].render.filepath + "_depth"
         bpy.ops.render.render(write_still=True)
+        #get camera parameters
         K_0 = get_calibration_matrix_K_from_blender(camera.data)
         RT_0, _ = get_3x4_RT_matrix_from_blender(camera)
         save_K_RT(K_0 , RT_0, save_dir, "left", i)
 
-        # right camera
+
         camera.location[0] = c2location[0] 
         camera.location[1] = c2location[1] 
         camera.location[2] = c2location[2] 
@@ -189,6 +220,7 @@ def render_image(save_dir: str, depth_file_output, pose_file: dict):
         RT_1, _ = get_3x4_RT_matrix_from_blender(camera)
         save_K_RT(K_1 , RT_1, save_dir, "right", i)
     
+
 def set_projector(camera):
     """
     let the projector to have the same rotation matrix as camera, and locate in the center of stereo camera
@@ -205,6 +237,14 @@ def set_projector(camera):
 
     return c2location
 
+def get_sensor_size(sensor_fit, sensor_x, sensor_y):
+    """
+    get the camera sensor size
+    """
+    if sensor_fit == 'VERTICAL':
+        return sensor_y
+    return sensor_x
+
 def get_3x4_RT_matrix_from_blender(cam):
     # bcam stands for blender camera
     R_bcam2cv = Matrix(
@@ -213,32 +253,17 @@ def get_3x4_RT_matrix_from_blender(cam):
         (0, 0, -1)))
 
 
-    # Transpose since the rotation is object rotation, 
-    # and we want coordinate rotation
-    # R_world2bcam = cam.rotation_euler.to_matrix().transposed()
-    # T_world2bcam = -1*R_world2bcam @ location
-    #
+
     # Use matrix_world instead to account for all constraint
-    #ipdb.set_trace()
     location, rotation = cam.matrix_world.decompose()[0:2]
     R_world2bcam = rotation.to_matrix().transposed()
 
-    # Convert camera location to translation vector used in coordinate changes
-    # T_world2bcam = -1*R_world2bcam @ cam.location
     # Use location from matrix_world to account for constraints:     
     T_world2bcam = -1*R_world2bcam @ location
-
-    #print(location)
-    #print(Vector((np.matrix(np.array(R_world2bcam)).I @ T_world2bcam * -1)[0].T))
-    
-    
 
     # Build the coordinate transform matrix from world to computer vision camera
     R_world2cv = R_bcam2cv@R_world2bcam
     T_world2cv = R_bcam2cv@T_world2bcam
-
-    #print(Vector((np.matrix(np.array(R_bcam2cv)).I @ T_world2cv)[0].T))
-    #print(T_world2bcam)
 
     # change the camera location in cv 
     T_world2cv_transform = T_world2cv - Vector((0.1,0,0))
@@ -253,6 +278,9 @@ def get_3x4_RT_matrix_from_blender(cam):
         R_world2cv[2][:] + (T_world2cv[2],)
         ))
     return RT, location_transform
+
+
+
 
 def get_calibration_matrix_K_from_blender(camd):
     """
@@ -304,7 +332,6 @@ def save_K_RT(K , RT, save_dir, side, view):
     """
     K = np.matrix(K)
     RT = np.matrix(RT)
-    # ipdb.set_trace()
 
     camera_file_R = '{}/Camera_R_{}_view_{}.txt'.format(save_dir, side, view)
     file = open(camera_file_R,'w')
@@ -340,13 +367,6 @@ def save_K_RT(K , RT, save_dir, side, view):
     
     file.close()
 
-def get_sensor_size(sensor_fit, sensor_x, sensor_y):
-    """
-    get the camera sensor size
-    """
-    if sensor_fit == 'VERTICAL':
-        return sensor_y
-    return sensor_x
 
 def get_sensor_fit(sensor_fit, size_x, size_y):
     """
