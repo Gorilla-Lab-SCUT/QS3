@@ -1,6 +1,6 @@
 # Quasi-Balanced Self-Training on Noise-Aware Synthesis of Object Point Clouds for Closing Domain Gap
 
-### [Paper](https://arxiv.org/abs/2203.03833) | [Data](https://drive.google.com/drive/folders/1gKLKxGsvAyJo0K4BxDkgBT_r2wk1F5Vm?usp=sharing)
+### [Paper](https://arxiv.org/abs/2203.03833) | [Data](https://drive.google.com/drive/folders/1gKLKxGsvAyJo0K4BxDkgBT_r2wk1F5Vm?usp=sharing) | [Supplementary Materials]
 
 <p align="center">
   <img width="100%" src="./figures/Teaser.jpg"/>
@@ -30,7 +30,7 @@ conda activate QBST
 We use our Mesh2Point pipeline to scan <a href="https://modelnet.cs.princeton.edu/">ModelNet</a> and generate a new dataset <a href="https://drive.google.com/drive/folders/1wcERGIKvJRlCbSndM_DCSfcvjiGvv_5g?usp=sharing">SpeckleNet</a>. Note that blender cannot import ModelNet's original file format, so we convert Object File Format (.off) to Wavefront OBJ Format (.obj). The converted version ModelNet_OBJ is available <a href="https://drive.google.com/drive/folders/1gKLKxGsvAyJo0K4BxDkgBT_r2wk1F5Vm?usp=sharing">here</a>.
 
 <p align="center">
-  <img width="100%" src="./figures/Mesh2Point.jpg"/>
+  <img width="100%" src="./figures/Mesh2Point.png"/>
 </p>
 
 You can also scan your own 3D model dataset using:
@@ -71,3 +71,4 @@ If you find our work useful in your research, please consider citing:
 - [ ] upload QBST code
 - [ ] upload ordinary code
 - [ ] generate environment.yml
+- [ ] update supplental link
