@@ -29,6 +29,9 @@ conda activate QBST
 #### Data
 We use our Mesh2Point pipeline to scan <a href="https://modelnet.cs.princeton.edu/">ModelNet</a> and generate a new dataset <a href="https://drive.google.com/drive/folders/1wcERGIKvJRlCbSndM_DCSfcvjiGvv_5g?usp=sharing">SpeckleNet</a>. Note that blender cannot import ModelNet's original file format, so we convert Object File Format (.off) to Wavefront OBJ Format (.obj). The converted version ModelNet_OBJ is available <a href="https://drive.google.com/drive/folders/1gKLKxGsvAyJo0K4BxDkgBT_r2wk1F5Vm?usp=sharing">here</a>.
 
+<p align="center">
+  <img width="100%" src="./figures/Mesh2Point.png"/>
+</p>
 
 You can also scan your own 3D model dataset using:
 ```
