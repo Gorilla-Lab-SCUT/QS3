@@ -2,7 +2,9 @@
 
 ### [Paper](https://arxiv.org/abs/2203.03833) | [Data](https://drive.google.com/drive/folders/1gKLKxGsvAyJo0K4BxDkgBT_r2wk1F5Vm?usp=sharing) | [Supplementary Materials]
 
-
+<p align="center">
+  <img width="100%" src="./figures/Teaser.jpg"/>
+</p>
 
 This repository contains an implementation for the ECCV 2022 paper <a href="https://arxiv.org/abs/2203.03833"> Quasi-Balanced Self-Training on Noise-Aware Synthesis of Object Point Clouds for Closing Domain Gap</a>.
 
