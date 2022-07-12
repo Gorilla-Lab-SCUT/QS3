@@ -11,7 +11,9 @@ This repository contains an implementation for the ECCV 2022 paper <a href="http
 This paper introduces an integrated scheme consisting of physically realistic synthesis of object point clouds via rendering stereo images via projection of speckle patterns onto CAD models and a novel quasi-balanced self-training designed for more balanced data distribution by sparsity-driven selection of pseudo labeled samples for long tailed classes.
 
 ## Installation Requirments
-The code for Mesh2Point pipeline that generates noisy point clouds is compatible with <a href="https://download.blender.org/release/">blender 2.93</a>, which also complile a default python environment. We use our Mesh2Point to scan the ModelNet dataset then get a noisy point cloud dataset--namely SpeckleNet, and the generated datasets are available <a href="https://drive.google.com/drive/folders/1gKLKxGsvAyJo0K4BxDkgBT_r2wk1F5Vm?usp=sharing">here</a> (<a href="https://drive.google.com/file/d/1RX_gridSacIs4xp58zoZ2yTtajEF2kzu/view?usp=sharing">SpeckleNet10</a> for 10 categories and <a href="https://drive.google.com/file/d/1SEyOjtV-2wr1eYWxU6mivOD9NRB2Qz35/view?usp=sharing">SpeckleNet40</a> for 40 categories). If you want to scan your own 3D models, please download blender <a href="https://download.blender.org/release/">blender 2.93</a> and install the required python libraries in blender's python environment by running:
+The code for Mesh2Point pipeline that generates noisy point clouds is compatible with <a href="https://download.blender.org/release/">blender 2.93</a>, which also complile a default python environment. We use our Mesh2Point to scan the ModelNet dataset then get a noisy point cloud dataset--namely SpeckleNet, and the generated datasets are available <a href="https://drive.google.com/drive/folders/1gKLKxGsvAyJo0K4BxDkgBT_r2wk1F5Vm?usp=sharing">here</a> (<a href="https://drive.google.com/file/d/1RX_gridSacIs4xp58zoZ2yTtajEF2kzu/view?usp=sharing">SpeckleNet10</a> for 10 categories and <a href="https://drive.google.com/file/d/1SEyOjtV-2wr1eYWxU6mivOD9NRB2Qz35/view?usp=sharing">SpeckleNet40</a> for 40 categories). 
+
+If you want to scan your own 3D models, please download blender <a href="https://download.blender.org/release/">blender 2.93</a> and install the required python libraries in blender's python environment by running:
 ```
 path_to_blender/blender-2.93.0-linux-x64/2.93/python/bin/pip -r install Mesh2Point_environment.yml
 ```
@@ -27,7 +29,7 @@ conda activate QBST
 ## Usage
 ### Obtain noisy data
 #### Data
-We use our Mesh2Point pipeline to scan <a href="https://modelnet.cs.princeton.edu/">ModelNet</a> and generate a new dataset <a href="https://drive.google.com/drive/folders/1wcERGIKvJRlCbSndM_DCSfcvjiGvv_5g?usp=sharing">SpeckleNet</a>. Note that blender cannot import ModelNet's original file format, so we convert Object File Format (.off) to Wavefront OBJ Format (.obj). The converted version ModelNet_OBJ is available <a href="https://drive.google.com/drive/folders/1gKLKxGsvAyJo0K4BxDkgBT_r2wk1F5Vm?usp=sharing">here</a>.
+We use our Mesh2Point pipeline to scan <a href="https://modelnet.cs.princeton.edu/">ModelNet</a> and generate a new dataset <a href="https://drive.google.com/drive/folders/1wcERGIKvJRlCbSndM_DCSfcvjiGvv_5g?usp=sharing">SpeckleNet</a>. Note that blender cannot import ModelNet's original file format, so we convert Object File Format (.off) to Wavefront OBJ Format (.obj). The converted version ModelNet40_OBJ is available <a href="https://drive.google.com/file/d/1WzCYS1HfUKij0hpSzkhfd8uWd2uEP26-/view?usp=sharing">here</a>.
 
 <p align="center">
   <img width="100%" src="./figures/Mesh2Point.png"/>
@@ -67,7 +69,7 @@ If you find our work useful in your research, please consider citing:
 
 ## TODO
 - [x] update scannet10 link
-- [ ] update modelnet_obj link
+- [x] update modelnet_obj link
 - [ ] upload QBST code
 - [ ] upload ordinary code
 - [ ] generate environment.yml
