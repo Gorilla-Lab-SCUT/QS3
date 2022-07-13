@@ -72,5 +72,5 @@ If you find our work useful in your research, please consider citing:
 - [x] update modelnet_obj link
 - [ ] upload QBST code
 - [ ] upload ordinary code
-- [ ] generate environment.yml
+- [x] generate environment.yml
 - [ ] update supplental link
