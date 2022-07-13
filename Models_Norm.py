@@ -234,7 +234,7 @@ class DGCNN(nn.Module):
         self.bn5 = nn.BatchNorm1d(1024)
         self.conv5 = nn.Conv1d(num_f_prev, 1024, kernel_size=1, bias=False)
 
-        self.cls_C = class_classifier(args, 2048, 11)
+        self.cls_C = class_classifier(args, 2048, 10)
         self.domain_C = domain_classifier(args, 2048, 2)
         self.posreg_C1 = linear_classifier(2048, 4)
         self.posreg_C2 = linear_classifier(2048, 4)
