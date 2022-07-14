@@ -43,11 +43,11 @@ Notice that you need to organize your own data in the same architecture as Model
 ### Ordinary Experiments
 We train four ordinary models, specifically, <a href="https://github.com/charlesq34/pointnet2">Ponitnet++</a>, <a href="https://github.com/WangYueFt/dgcnn">DGCNN</a>, <a href="https://github.com/Yochengliu/Relation-Shape-CNN">RSCNN</a> and <a href="https://github.com/princeton-vl/SimpleView">SimpleView</a> on <a href="https://drive.google.com/file/d/1OcPHRtAznBev53PK9sPupNZI1p6-gu2_/view?usp=sharing">ModelNet10 (**M**)</a> and <a href="https://drive.google.com/file/d/1RX_gridSacIs4xp58zoZ2yTtajEF2kzu/view?usp=sharing">SpeckleNet10 (**S**)</a> respectively, and test classification accuracy on <a href="https://drive.google.com/file/d/1gWf5X8HVt0cFpDf-I-lpoqrOBc_kqVL-/view?usp=sharing">DepthScanNet10</a>. The results are shown as following (detailed in our paper): 
 
-<center>
-<table border="2"><tbody>
+<div align="center">
+<table><tbody>
 <!-- START TABLE -->
 <!-- TABLE HEADER -->
-<th valign="bottom">Mothod</th>
+<th valign="bottom">Method</th>
 <th valign="bottom"><b>M</b> &rarr; D </th>
 <th valign="bottom"><b>S</b> &rarr; D</th>
 <!-- TABLE BODY -->
@@ -67,7 +67,7 @@ We train four ordinary models, specifically, <a href="https://github.com/charles
 <td align="center"><tt>54.6 &pm; 0.7</tt></td>
 <td align="center"><tt><b> 62.3 &pm; 1.3</b></tt></td>
 </tbody></table>
-</center>
+</div>
 
 
 
