@@ -93,7 +93,7 @@ We train four ordinary models, specifically, <a href="https://github.com/charles
 The codes we use for training the ordinary models are from <a href="https://github.com/princeton-vl/SimpleView">SimpleView</a>, please follow the instruction on their github repository to recurrent the results.
 
 ### UDA Experiments
- We also evaluate our QS3 and other unsupervised domain adaptation methods on <a href="https://drive.google.com/file/d/1L2l67Wop1Mvw2yIxufxmm5i82qJKoF7B/view?usp=sharing">ScanNet10 （__S*__)</a> and <a href="https://drive.google.com/file/d/1gWf5X8HVt0cFpDf-I-lpoqrOBc_kqVL-/view?usp=sharing">DepthScanNet10 (__D__)</a>, the results are as following (detailed in our paper):
+ We also evaluate our QS3 and other unsupervised domain adaptation methods on realistic datasets <a href="https://drive.google.com/file/d/1L2l67Wop1Mvw2yIxufxmm5i82qJKoF7B/view?usp=sharing">ScanNet10 (__S*__)</a> and <a href="https://drive.google.com/file/d/1gWf5X8HVt0cFpDf-I-lpoqrOBc_kqVL-/view?usp=sharing">DepthScanNet10 (__D__)</a>, the results are as following (detailed in our paper):
 
 
 
