@@ -41,10 +41,30 @@ CUDA_VISIBLE_DEVICES=0 path_to_blender/blender-2.93.0-linux-x64/blender ./blend_
 Notice that you need to organize your own data in the same architecture as ModelNet.
 
 ### Ordinary Experiments
-We train four ordinary models, specifically, <a href="https://github.com/charlesq34/pointnet2">Ponitnet++</a>, <a href="https://github.com/WangYueFt/dgcnn">DGCNN</a>, <a href="https://github.com/Yochengliu/Relation-Shape-CNN">RSCNN</a> and <a href="https://github.com/princeton-vl/SimpleView">SimpleView</a> on <a href="https://drive.google.com/file/d/1OcPHRtAznBev53PK9sPupNZI1p6-gu2_/view?usp=sharing">ModelNet10 (M)</a> and <a href="https://drive.google.com/file/d/1RX_gridSacIs4xp58zoZ2yTtajEF2kzu/view?usp=sharing">SpeckleNet10 (S)</a> respectively, and test classification accuracy on <a href="https://drive.google.com/file/d/1gWf5X8HVt0cFpDf-I-lpoqrOBc_kqVL-/view?usp=sharing">DepthScanNet10</a>. The results are shown as following:
+We train four ordinary models, specifically, <a href="https://github.com/charlesq34/pointnet2">Ponitnet++</a>, <a href="https://github.com/WangYueFt/dgcnn">DGCNN</a>, <a href="https://github.com/Yochengliu/Relation-Shape-CNN">RSCNN</a> and <a href="https://github.com/princeton-vl/SimpleView">SimpleView</a> on <a href="https://drive.google.com/file/d/1OcPHRtAznBev53PK9sPupNZI1p6-gu2_/view?usp=sharing">ModelNet10 (M)</a> and <a href="https://drive.google.com/file/d/1RX_gridSacIs4xp58zoZ2yTtajEF2kzu/view?usp=sharing">SpeckleNet10 (S)</a> respectively, and test classification accuracy on <a href="https://drive.google.com/file/d/1gWf5X8HVt0cFpDf-I-lpoqrOBc_kqVL-/view?usp=sharing">DepthScanNet10</a>. The results are shown as following (detailed in our paper):
 <p align="center">
   <img width="100%" src="./figures/ordinary.png"/>
 </p>
+
+<table><tbody>
+<!-- START TABLE -->
+<!-- TABLE HEADER -->
+<th valign="bottom">Mothod</th>
+<th valign="bottom">M \longrightarrow D </th>
+<th valign="bottom">ViT-Large</th>
+<th valign="bottom">ViT-Huge</th>
+<!-- TABLE BODY -->
+<tr><td align="left">pre-trained checkpoint</td>
+<td align="center"><a href="https://dl.fbaipublicfiles.com/mae/pretrain/mae_pretrain_vit_base.pth">download</a></td>
+<td align="center"><a href="https://dl.fbaipublicfiles.com/mae/pretrain/mae_pretrain_vit_large.pth">download</a></td>
+<td align="center"><a href="https://dl.fbaipublicfiles.com/mae/pretrain/mae_pretrain_vit_huge.pth">download</a></td>
+</tr>
+<tr><td align="left">md5</td>
+<td align="center"><tt>8cad7c</tt></td>
+<td align="center"><tt>b8b06e</tt></td>
+<td align="center"><tt>9bdbb0</tt></td>
+</tr>
+</tbody></table>
 The codes we use for training the ordinary models are from <a href="https://github.com/princeton-vl/SimpleView">SimpleView</a>, please follow the instruction on their github repository to recurrent the results.
 
 ### UDA experiments
