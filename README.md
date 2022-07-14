@@ -37,14 +37,17 @@ We use our Mesh2Point pipeline to scan <a href="https://modelnet.cs.princeton.ed
 
 You can also scan your own 3D model dataset using:
 ```
-CUDA_VISIBLE_DEVICES=0 path_to_blender/blender-2.93.0-linux-x64/blender ./blend_file/spot.blend -b --python scan_models.py --  --view=1 --modelnet_dir=path_to_model_dataset --category_list=bed
+CUDA_VISIBLE_DEVICES=0 path_to_blender/blender-2.93.0-linux-x64/blender ./blend_file/spot.blend -b --python scan_models.py --  --view=5 --modelnet_dir=path_to_model_dataset --category_list=bed
 ```
 Notice that you need to organize your own data in the same architecture as ModelNet.
 
 #### Training with ordinary model
-```
-To be done...
-```
+We also train four ordinary model, specifically, <a href="https://github.com/charlesq34/pointnet2">Poninet++</a>, <a href="https://github.com/WangYueFt/dgcnn">DGCNN</a>, <a href="https://github.com/Yochengliu/Relation-Shape-CNN">RSCNN</a> and <a href="https://github.com/princeton-vl/SimpleView">SimpleView</a> on ModelNet10 and SpeckleNet10 respectively, and test classification accuracy on DepthScanNet10. The results are shown as following:
+<p align="center">
+  <img width="100%" src="./figures/ordinary.png"/>
+</p>
+The codes we use for training the ordinary model are from <a href="https://github.com/princeton-vl/SimpleView">SimpleView</a>, please follow the instruction on their github repository to recurrent the results.
+
 #### Training with QBST
 ```
 To be done...
@@ -71,6 +74,6 @@ If you find our work useful in your research, please consider citing:
 - [x] update scannet10 link
 - [x] update modelnet_obj link
 - [ ] upload QBST code
-- [ ] upload ordinary code
+- [x] upload ordinary code
 - [x] generate environment.yml
 - [ ] update supplental link
