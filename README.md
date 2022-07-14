@@ -2,13 +2,20 @@
 
 ### [Paper](https://arxiv.org/abs/2203.03833) | [Data](https://drive.google.com/drive/folders/1gKLKxGsvAyJo0K4BxDkgBT_r2wk1F5Vm?usp=sharing) | [Supplementary Materials]
 
-<p align="center">
-  <img width="100%" src="./figures/Teaser.jpg"/>
-</p>
-
 This repository contains an implementation for the ECCV 2022 paper <a href="https://arxiv.org/abs/2203.03833"> Quasi-Balanced Self-Training on Noise-Aware Synthesis of Object Point Clouds for Closing Domain Gap</a>.
 
-This paper introduces an integrated scheme consisting of physically realistic synthesis of object point clouds via rendering stereo images via projection of speckle patterns onto CAD models and a novel quasi-balanced self-training designed for more balanced data distribution by sparsity-driven selection of pseudo labeled samples for long tailed classes.
+<p align="center">
+  <img width="100%" src="./figures/teaser.png"/>
+</p>
+
+We propose an integrated scheme of Quasi-balanced Self-training on Speckle-projected
+Synthesis (QS3) to cope with shape and density shift between synthetic and real point clouds.
+Given identical CAD models, we generate a point cloud SpeckleNet dataset simulating realistic
+noises in stereo imaging and matching; while point clouds in existing ModelNet dataset are sampled from object surface of those models. Moreover, we design a novel quasi-balanced selftraining
+(QBST) strategy to further boost the UDA performance. With two representative UDA
+methods (DefRec+PCM, PointDAN) and two representative point cloud classification
+networks (PointNet++, DGCNN), our integrated QS3 can perform consistently better
+than others, when evaluating on real world data – an adapted DepthScanNet.
 
 ## Installation Requirments
 The code for Mesh2Point pipeline that generates noisy point clouds is compatible with <a href="https://download.blender.org/release/">blender 2.93</a>, which also complile a default python environment. We use our Mesh2Point to scan the ModelNet dataset then get a noisy point cloud dataset--namely SpeckleNet, and the generated datasets are available <a href="https://drive.google.com/drive/folders/1wcERGIKvJRlCbSndM_DCSfcvjiGvv_5g?usp=sharing">here</a> (<a href="https://drive.google.com/file/d/1RX_gridSacIs4xp58zoZ2yTtajEF2kzu/view?usp=sharing">SpeckleNet10</a> for 10 categories and <a href="https://drive.google.com/file/d/1SEyOjtV-2wr1eYWxU6mivOD9NRB2Qz35/view?usp=sharing">SpeckleNet40</a> for 40 categories). 
