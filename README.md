@@ -73,7 +73,7 @@ We train four ordinary models, specifically, <a href="https://github.com/charles
 
 The codes we use for training the ordinary models are from <a href="https://github.com/princeton-vl/SimpleView">SimpleView</a>, please follow the instruction on their github repository to recurrent the results.
 
-### UDA experiments
+### UDA Experiments
 ```
 To be done...
 ```
