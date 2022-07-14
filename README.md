@@ -80,4 +80,4 @@ If you find our work useful in your research, please consider citing:
 - [x] upload ordinary code
 - [x] generate environment.yml
 - [ ] update supplental link
-- [ ] update ModelNet10 link
+- [x] update ModelNet10 link
