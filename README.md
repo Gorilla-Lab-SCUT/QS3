@@ -58,9 +58,9 @@ We train four ordinary models, specifically, <a href="https://github.com/charles
 <!-- TABLE HEADER -->
 <th valign="bottom">Method</th>
 <th valign="bottom"><b>M</b> &rarr; D </th>
-<th valign="bottom"><b>S</b> &rarr; D</th>
+<th valign="bottom"><b>S</b> &rarr; D (ours)</th>
 <th valign="bottom"><b>M</b> &rarr; S*</th>
-<th valign="bottom"><b>S</b> &rarr; S*</th>
+<th valign="bottom"><b>S</b> &rarr; S* (ours)</th>
 <!-- TABLE BODY -->
 <tr><td align="left">PointNet++</td>
 <td align="center"><tt>48.4 &pm; 1.3 </tt></td>
@@ -103,42 +103,33 @@ If you want to evaluate your models on both realistic datasets, please download 
 <th valign="bottom"><b>S</b> &rarr; D</th>
 </thead>
 <!-- TABLE BODY -->
-<tr><td align="left">Surpervised</td>
-<td align="center"><tt>48.4 &pm; 1.3 </tt></td>
-<td align="center"><tt><b>60.9 &pm; 0.8</b></tt></td>
-</tr>
-<tr><td align="left">DGCNN (w/o Adapt)</td>
-<td align="center"><tt>46.7 &pm; 1.4</tt></td>
-<td align="center"><tt><b>64.0 &pm; 1.0</b></tt></td>
-</tr>
-</thead>
 <tr><td align="left">PointDAN</td>
-<td align="center"><tt>49.7 &pm; 1.1</tt></td>
-<td align="center"><tt><b>53.9 &pm; 1.2</b></tt></td>
+<td align="center"><tt>58.9 &pm; 0.9</tt></td>
+<td align="center"><tt>62.9 &pm; 1.6</tt></td>
 </tr>
 <tr><td align="left">DefRec</td>
-<td align="center"><tt>54.6 &pm; 0.7</tt></td>
-<td align="center"><tt><b> 62.3 &pm; 1.3</b></tt></td>
+<td align="center"><tt>57.8 &pm; 1.1</tt></td>
+<td align="center"><tt>60.8 &pm; 0.6</tt></td>
 </tr>
 <tr><td align="left">DefRec+PCM</td>
-<td align="center"><tt>54.6 &pm; 0.7</tt></td>
-<td align="center"><tt><b> 62.3 &pm; 1.3</b></tt></td>
+<td align="center"><tt>62.1 &pm; 0.8</tt></td>
+<td align="center"><tt>64.4 &pm; 0.7</tt></td>
 </tr>
 <tr><td align="left">GAST w/o SPST</td>
-<td align="center"><tt>54.6 &pm; 0.7</tt></td>
-<td align="center"><tt><b> 62.3 &pm; 1.3</b></tt></td>
+<td align="center"><tt>62.4 &pm; 1.1</tt></td>
+<td align="center"><tt>61.8 &pm; 1.0</tt></td>
 </tr>
 <tr><td align="left">GAST</td>
-<td align="center"><tt>54.6 &pm; 0.7</tt></td>
-<td align="center"><tt><b> 62.3 &pm; 1.3</b></tt></td>
+<td align="center"><tt>64.8 &pm; 1.4</tt></td>
+<td align="center"><tt>64.4 &pm; 0.2</tt></td>
 </tr>
 <tr><td align="left">QBST (ours)</td>
-<td align="center"><tt>54.6 &pm; 0.7</tt></td>
-<td align="center"><tt><b> 62.3 &pm; 1.3</b></tt></td>
+<td align="center"><tt><b>66.4 &pm; 1.1</b></tt></td>
+<td align="center"><tt> - </tt></td>
 </tr>
 <tr><td align="left">QS3</td>
-<td align="center"><tt>54.6 &pm; 0.7</tt></td>
-<td align="center"><tt><b> 62.3 &pm; 1.3</b></tt></td>
+<td align="center"><tt> - </tt></td>
+<td align="center"><tt><b> 72.4 &pm; 0.8</b></tt></td>
 </tbody></table>
 </div>
 
