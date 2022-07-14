@@ -104,35 +104,43 @@ The codes we use for training the ordinary models are from <a href="https://gith
 <th valign="bottom">Method</th>
 <th valign="bottom"><b>M</b> &rarr; D </th>
 <th valign="bottom"><b>S</b> &rarr; D</th>
+<th valign="bottom"><b>S</b> &rarr; S*</th>
 </thead>
 <!-- TABLE BODY -->
 <tr><td align="left">PointDAN</td>
 <td align="center"><tt>58.9 &pm; 0.9</tt></td>
 <td align="center"><tt>62.9 &pm; 1.6</tt></td>
+<td align="center"><tt>53.5 &pm; 0.8</tt></td>
 </tr>
 <tr><td align="left">DefRec</td>
 <td align="center"><tt>57.8 &pm; 1.1</tt></td>
 <td align="center"><tt>60.8 &pm; 0.6</tt></td>
+<td align="center"><tt>50.9 &pm; 0.1</tt></td>
 </tr>
 <tr><td align="left">DefRec+PCM</td>
 <td align="center"><tt>62.1 &pm; 0.8</tt></td>
 <td align="center"><tt>64.4 &pm; 0.7</tt></td>
+<td align="center"><tt>56.1 &pm; 0.2</tt></td>
 </tr>
 <tr><td align="left">GAST w/o SPST</td>
 <td align="center"><tt>62.4 &pm; 1.1</tt></td>
 <td align="center"><tt>61.8 &pm; 1.0</tt></td>
+<td align="center"><tt>49.3 &pm; 1.1</tt></td>
 </tr>
 <tr><td align="left">GAST</td>
 <td align="center"><tt>64.8 &pm; 1.4</tt></td>
 <td align="center"><tt>64.4 &pm; 0.2</tt></td>
+<td align="center"><tt>51.9 &pm; 0.9</tt></td>
 </tr>
 <tr><td align="left">QBST (ours)</td>
 <td align="center"><tt><b>66.4 &pm; 1.1</b></tt></td>
+<td align="center"><tt> - </tt></td>
 <td align="center"><tt> - </tt></td>
 </tr>
 <tr><td align="left">QS3 (ours)</td>
 <td align="center"><tt> - </tt></td>
 <td align="center"><tt><b> 72.4 &pm; 0.8</b></tt></td>
+<td align="center"><tt><b> 57.4 &pm; 0.2</b></tt></td>
 </tbody></table>
 </div>
 
