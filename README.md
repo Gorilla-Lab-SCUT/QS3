@@ -27,7 +27,7 @@ conda activate QBST
 ```
 
 ## Usage
-### Obtain noisy data
+### Obtain data
 #### Data
 We use our Mesh2Point pipeline to scan <a href="https://modelnet.cs.princeton.edu/">ModelNet</a> and generate a new dataset <a href="https://drive.google.com/drive/folders/1wcERGIKvJRlCbSndM_DCSfcvjiGvv_5g?usp=sharing">SpeckleNet</a>. Note that blender cannot import ModelNet's original file format, so we convert Object File Format (.off) to Wavefront OBJ Format (.obj). The converted version ModelNet40_OBJ is available <a href="https://drive.google.com/file/d/1WzCYS1HfUKij0hpSzkhfd8uWd2uEP26-/view?usp=sharing">here</a>.
 
@@ -42,11 +42,11 @@ CUDA_VISIBLE_DEVICES=0 path_to_blender/blender-2.93.0-linux-x64/blender ./blend_
 Notice that you need to organize your own data in the same architecture as ModelNet.
 
 #### Training with ordinary model
-We also train four ordinary model, specifically, <a href="https://github.com/charlesq34/pointnet2">Poninet++</a>, <a href="https://github.com/WangYueFt/dgcnn">DGCNN</a>, <a href="https://github.com/Yochengliu/Relation-Shape-CNN">RSCNN</a> and <a href="https://github.com/princeton-vl/SimpleView">SimpleView</a> on ModelNet10 and SpeckleNet10 respectively, and test classification accuracy on DepthScanNet10. The results are shown as following:
+We also train four ordinary model, specifically, <a href="https://github.com/charlesq34/pointnet2">Poninet++</a>, <a href="https://github.com/WangYueFt/dgcnn">DGCNN</a>, <a href="https://github.com/Yochengliu/Relation-Shape-CNN">RSCNN</a> and <a href="https://github.com/princeton-vl/SimpleView">SimpleView</a> on <a href="https://drive.google.com/file/d/1OcPHRtAznBev53PK9sPupNZI1p6-gu2_/view?usp=sharing">ModelNet10</a> and SpeckleNet10 respectively, and test classification accuracy on DepthScanNet10. The results are shown as following:
 <p align="center">
   <img width="100%" src="./figures/ordinary.png"/>
 </p>
-The codes we use for training the ordinary model are from <a href="https://github.com/princeton-vl/SimpleView">SimpleView</a>, please follow the instruction on their github repository to recurrent the results.
+The codes we use for training the ordinary models are from <a href="https://github.com/princeton-vl/SimpleView">SimpleView</a>, please follow the instruction on their github repository to recurrent the results.
 
 #### Training with QBST
 ```
@@ -77,3 +77,4 @@ If you find our work useful in your research, please consider citing:
 - [x] upload ordinary code
 - [x] generate environment.yml
 - [ ] update supplental link
+- [ ] update ModelNet10 link
