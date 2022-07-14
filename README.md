@@ -130,7 +130,7 @@ The codes we use for training the ordinary models are from <a href="https://gith
 <td align="center"><tt><b>66.4 &pm; 1.1</b></tt></td>
 <td align="center"><tt> - </tt></td>
 </tr>
-<tr><td align="left">QS3</td>
+<tr><td align="left">QS3 (ours)</td>
 <td align="center"><tt> - </tt></td>
 <td align="center"><tt><b> 72.4 &pm; 0.8</b></tt></td>
 </tbody></table>
