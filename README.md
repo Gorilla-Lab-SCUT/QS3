@@ -164,12 +164,3 @@ If you find our work useful in your research, please consider citing:
         journal={arXiv preprint arXiv:2203.03833},
         year={2022}
         }
-
-## TODO
-- [x] update scannet10 link
-- [x] update modelnet_obj link
-- [ ] upload QBST code
-- [x] upload ordinary code
-- [x] generate environment.yml
-- [ ] update supplental link
-- [x] update ModelNet10 link
