@@ -158,9 +158,9 @@ This work is built on some excellent works, thanks for their efforts. If you fin
 ## Citation
 If you find our work useful in your research, please consider citing:
 
-        @article{chen2022quasi,
+        @inproceedings{chen2022quasi,
         title={Quasi-Balanced Self-Training on Noise-Aware Synthesis of Object Point Clouds for Closing Domain Gap},
         author={Chen, Yongwei and Wang, Zihao and Zou, Longkun and Chen, Ke and Jia, Kui},
-        journal={arXiv preprint arXiv:2203.03833},
+        booktitle={Proceedings of the European Conference on Computer Vision (ECCV)},
         year={2022}
         }
