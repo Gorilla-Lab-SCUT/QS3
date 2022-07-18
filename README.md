@@ -25,7 +25,7 @@ If you want to scan your own 3D models, please download blender <a href="https:/
 path_to_blender/blender-2.93.0-linux-x64/2.93/python/bin/pip install -r Mesh2Point_environment.yml
 ```
 
-Meanwhile, we also release the code for Quasi-Balanced Self-Training (QBST), which is compatible with python <font color="#dd0000">xx</font><br /> and pytorch <font color="#dd0000">xx</font><br />.
+Meanwhile, we also release the code for Quasi-Balanced Self-Training (QBST), which is compatible with python 3.7.11 and pytorch 1.7.1.
 
 You can create an anaconda environment called QBST with the required dependencies by running:
 ```
@@ -146,7 +146,7 @@ The codes we use for training the ordinary models are from <a href="https://gith
 
 To train QS3 from scratch, please running:
 ```
-To be done...
+python train_QBST_sim2real.py
 ```
 ##  Acknowledgment
 This work is built on some excellent works, thanks for their efforts. If you find them helpful, please consider citing them.
