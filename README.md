@@ -27,10 +27,9 @@ path_to_blender/blender-2.93.0-linux-x64/2.93/python/bin/pip install -r Mesh2Poi
 
 Meanwhile, we also release the code for Quasi-Balanced Self-Training (QBST), which is compatible with python 3.7.11 and pytorch 1.7.1.
 
-You can create an anaconda environment called QBST with the required dependencies by running:
+You can create an environment called QBST with the required dependencies by running:
 ```
-conda env create -f QBST_environment.yml
-conda activate QBST
+pip install -r QBST_environment.yml
 ```
 
 ## Usage
